@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <v-alert/>
     <v-header/>
     <main role="main" class="container">
       <router-view/>
@@ -11,11 +12,13 @@
 <script>
 import vHeader from "@/components/v-header.vue";
 import vFooter from "@/components/v-footer.vue";
+import vAlert from "@/components/v-alert";
 
 export default {
   components: {
     vHeader,
-    vFooter
+    vFooter,
+    vAlert
   }
 };
 </script>

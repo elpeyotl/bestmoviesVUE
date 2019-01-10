@@ -10,11 +10,16 @@
         <li class="nav-item-footer col">
           <router-link class="nav-link-footer" to="/watchlist">
             <i class="fas fa-heart"></i>
+            <span
+              class="badge badge-info footer-number"
+              v-if="movieWatchList > 0"
+            >{{movieWatchList}}</span>
           </router-link>
         </li>
         <li class="nav-item-footer col">
           <router-link class="nav-link-footer" to="/watched">
             <i class="far fa-eye"></i>
+            <span class="badge badge-info footer-number" v-if="movieSeenList > 0">{{movieSeenList}}</span>
           </router-link>
         </li>
       </ul>
@@ -23,6 +28,18 @@
 </template>
 
 
+<script>
+export default {
+  computed: {
+    movieSeenList() {
+      return this.$store.state.movieSeenlist.total_results;
+    },
+    movieWatchList() {
+      return this.$store.state.movieWatchlist.total_results;
+    }
+  }
+};
+</script>
 
 <style scoped lang="scss">
 html {
@@ -60,5 +77,9 @@ body {
   &:hover {
     color: white;
   }
+}
+
+.footer-number {
+  font-size: 0.8rem;
 }
 </style>

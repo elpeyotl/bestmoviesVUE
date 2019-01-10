@@ -3,15 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
-// import moment from 'moment'
-
-// Vue.mixin({
-//   methods: {
-//     formatDate (date, format) {
-//       return moment(String(date)).format(format)
-//     }
-//   }
-// })
 
 Vue.config.productionTip = false
 

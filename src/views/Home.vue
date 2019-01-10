@@ -1,57 +1,14 @@
 <template>
   <div>
-    <section class="jumbotron text-center">
-      <div class="container">
-        <h1 class="jumbotron-heading">Best rated movies</h1>
-        <p
-          class="lead text-muted"
-        >Discover best rated movies of all time and add it to your watchlist.</p>
-        <p>
-          <a href="#" class="btn btn-primary my-2 m-2">Create account</a>
-          <a href="#" class="btn btn-secondary my-2 m-2">Login</a>
-        </p>
-        <p class="small">You can save your selection by creating an account or login in.</p>
-      </div>
-    </section>
+    <v-jumbotron
+      heading="Best rated Movies"
+      text="Discover best rated movies of all time and add it to your watchlist."
+    />
+    <v-movie-filter/>
 
     <section>
       <div class="container">
-        <table v-show="movies" class="table table-striped table-responsive">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col"></th>
-              <th scope="col">Movie</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(movie, index) in movies.results" :key="movie.id">
-              <th scope="row align-middle">{{index + 1}}</th>
-              <td class>
-                <img :src="imageBaseUrl + imageThumb + movie.backdrop_path">
-              </td>
-              <td>
-                <p class="lead">
-                  {{movie.title}}
-                  <span
-                    class="badge badge-info float-right m-1"
-                  >Year {{formatDate(movie.release_date, 'YYYY')}}</span>
-                  <span class="badge badge-warning float-right m-1">Rating {{movie.vote_average}}</span>
-                </p>
-                <p>{{movie.overview}}</p>
-              </td>
-              <td>
-                <button type="button" class="btn btn-outline-danger m-1">
-                  <i class="far fa-heart"></i>
-                </button>
-                <button type="button" class="btn btn-outline-info m-1">
-                  <i class="far fa-eye"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <v-movie-table :movies="movies"/>
       </div>
     </section>
   </div>
@@ -59,26 +16,50 @@
 
 <script>
 import http from "@/services/httpService";
-import { formatDate } from "@/mixins/formatDate";
+import vMovieTable from "@/components/v-movieTable";
+import vMovieFilter from "@/components/v-movieFilter";
+import vJumbotron from "@/components/v-jumbotron";
 
 export default {
-  mixins: [formatDate],
-  data: function() {
+  components: { vMovieTable, vMovieFilter, vJumbotron },
+  data: () => {
     return {
-      movies: [],
-      imageBaseUrl: "http://image.tmdb.org/t/p/",
-      imageThumb: "w300"
+      movies: {
+        results: []
+      }
     };
+  },
+  computed: {
+    filter() {
+      return this.$store.state.movieFilter;
+    }
+  },
+  watch: {
+    filter(newfilter, oldfilter) {
+      // Our fancy notification (2).
+      console.log(newfilter, oldfilter);
+      this.getData();
+    }
   },
   methods: {
     async getData() {
-      const { data: movies } = await http.get("/movie/top_rated");
+      const { data: movies } = await http.get(
+        this.$store.state.movieFilter.url,
+        {
+          params: {
+            ...this.$store.state.movieFilter.params
+          }
+        }
+      );
+      console.log(this.$store.state.movieFilter);
       this.movies = movies;
     }
   },
-  computed: {},
-  mounted: function() {
+  created: function() {
     this.getData();
   }
 };
 </script>
+
+<style lang="scss">
+</style>
