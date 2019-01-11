@@ -5,6 +5,8 @@ const instance = axios.create({
   params: { api_key: process.env.VUE_APP_APIKEY }
 })
 
+console.log(process.env.VUE_APP_APIENDPOINT, 'test')
+
 instance.interceptors.response.use(null, error => {
   const expectedError =
     error.response &&
