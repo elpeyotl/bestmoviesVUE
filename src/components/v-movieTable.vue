@@ -56,7 +56,7 @@ export default {
   mixins: [formatDate],
   data: function() {
     return {
-      imageBaseUrl: "http://image.tmdb.org/t/p/",
+      imageBaseUrl: "https://image.tmdb.org/t/p/",
       imageThumb: "w300"
     };
   },
