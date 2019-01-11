@@ -4,7 +4,8 @@ import VuexPersist from 'vuex-persist'
 
 const vuexPersist = new VuexPersist({
   key: 'vuex',
-  storage: localStorage
+  storage: localStorage,
+  reducer: state => ({ movies: state.movies, movieWatchlist: state.movieWatchlist, movieSeenlist: state.movieSeenlist })
 })
 
 Vue.use(Vuex)
