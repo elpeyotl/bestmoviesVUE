@@ -1,9 +1,9 @@
 <template>
-  <select class="custom-select custom-select-lg mb-3">
+  <select class="custom-select custom-select-lg mb-3" v-model="selected">
     <option
       v-for="(option, index) in options"
       :key="index"
-      :value="option.id"
+      :value="option"
       @click="updateMovies(option)"
     >{{option.name}}</option>
   </select>
@@ -15,13 +15,16 @@ import http from "@/services/httpService";
 export default {
   data: () => {
     return {
-      options: [{ name: "Best rated movies", id: "/movie/top_rated" }]
+      options: [{ name: "Best rated movies", id: "/movie/top_rated" }],
+      selected: {
+        name: "Best rated movies",
+        id: "/movie/top_rated"
+      }
     };
   },
   methods: {
     async getData() {
       const { data: genres } = await http.get("/genre/movie/list");
-      console.log(this.options);
       this.options = [...this.options, ...genres.genres];
     },
     updateMovies(option) {
@@ -42,6 +45,11 @@ export default {
         };
         this.$store.commit("updateMovieFilter", request);
       }
+    }
+  },
+  watch: {
+    selected: function(val) {
+      this.updateMovies(val);
     }
   },
   created: function() {
