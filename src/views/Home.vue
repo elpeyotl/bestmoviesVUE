@@ -9,6 +9,7 @@
     <section>
       <div class="container">
         <v-movie-table :movies="movies"/>
+        <v-layzload/>
       </div>
     </section>
   </div>
@@ -19,9 +20,10 @@ import http from "@/services/httpService";
 import vMovieTable from "@/components/v-movieTable";
 import vMovieFilter from "@/components/v-movieFilter";
 import vJumbotron from "@/components/v-jumbotron";
+import vLayzload from "@/components/v-lazyload";
 
 export default {
-  components: { vMovieTable, vMovieFilter, vJumbotron },
+  components: { vMovieTable, vMovieFilter, vJumbotron, vLayzload },
   data: () => {
     return {
       movies: {
@@ -35,9 +37,7 @@ export default {
     }
   },
   watch: {
-    filter(newfilter, oldfilter) {
-      // Our fancy notification (2).
-      console.log(newfilter, oldfilter);
+    filter() {
       this.getData();
     }
   },
@@ -51,12 +51,16 @@ export default {
           }
         }
       );
-      console.log(this.$store.state.movieFilter);
       this.movies = movies;
+      this.$store.commit("storeMovies", this.movies);
     }
   },
   created: function() {
-    this.getData();
+    if (this.$store.state.movies.results.length === 0) {
+      this.getData();
+    } else {
+      this.movies = this.$store.state.movies;
+    }
   }
 };
 </script>

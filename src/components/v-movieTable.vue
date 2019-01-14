@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="movieTable">
     <table class="table table-striped table-responsive" v-if="movies.results.length > 0">
       <thead>
         <tr>
@@ -16,7 +16,9 @@
           <th scope="row align-middle">{{index + 1}}</th>
           <td class="cursor" @click="movieDetail(movie)">
             <div v-if="movie.backdrop_path">
-              <img :src="imageBaseUrl + imageThumb + movie.backdrop_path">
+              <img
+                :src="`${$store.state.config.images.secure_base_url}${$store.state.config.images.poster_sizes[1]}${movie.poster_path}`"
+              >
             </div>
             <div v-else>
               <i class="far fa-image mx-auto"></i>
@@ -55,14 +57,14 @@ export default {
   props: ["movies"],
   mixins: [formatDate],
   data: function() {
-    return {
-      imageBaseUrl: "https://image.tmdb.org/t/p/",
-      imageThumb: "w300"
-    };
+    return {};
   },
   methods: {
     movieDetail(movie) {
-      this.$router.push({ name: "movies", params: { id: movie.id } });
+      this.$router.push({
+        name: "movies",
+        params: { id: movie.id, data: movie }
+      });
     }
   }
 };

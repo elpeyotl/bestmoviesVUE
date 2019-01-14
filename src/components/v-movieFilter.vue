@@ -1,6 +1,7 @@
 <template>
-  <select class="custom-select custom-select-lg mb-3" v-model="selected">
+  <select class="custom-select custom-select-lg mb-3">
     <option
+      :selected="selected.id === option.id"
       v-for="(option, index) in options"
       :key="index"
       :value="option"
@@ -12,39 +13,54 @@
 <script>
 import http from "@/services/httpService";
 
+var defaultgenre = {
+  name: "Best rated movies",
+  id: "/movie/top_rated"
+};
+
 export default {
   data: () => {
     return {
-      options: [{ name: "Best rated movies", id: "/movie/top_rated" }],
-      selected: {
-        name: "Best rated movies",
-        id: "/movie/top_rated"
-      }
+      placeholder: [{ name: "Best rated movies", id: "/movie/top_rated" }]
     };
   },
   methods: {
     async getData() {
       const { data: genres } = await http.get("/genre/movie/list");
-      this.options = [...this.options, ...genres.genres];
+      const options = [...this.placeholder, ...genres.genres];
+      this.$store.commit("activeGenre", defaultgenre);
+      this.$store.commit("storeGenres", options);
     },
     updateMovies(option) {
-      if (Number.isInteger(option.id)) {
-        const request = {
-          url: "/discover/movie",
-          name: option.name,
-          params: {
-            with_genres: option.id,
-            sort_by: "vote_average.desc",
-            include_adult: false
-          }
-        };
-        this.$store.commit("updateMovieFilter", request);
-      } else {
-        const request = {
-          url: option.id
-        };
-        this.$store.commit("updateMovieFilter", request);
+      if (this.$store.state.activeGenre.id != option.id) {
+        this.$store.commit("activeGenre", option);
+        if (Number.isInteger(option.id)) {
+          const request = {
+            url: "/discover/movie",
+            name: option.name,
+            params: {
+              with_genres: option.id,
+              sort_by: "vote_average.desc",
+              include_adult: false
+            }
+          };
+          this.$store.commit("updateMovieFilter", request);
+        } else {
+          const request = {
+            url: option.id
+          };
+          this.$store.commit("activeGenre", defaultgenre);
+          this.$store.commit("updateMovieFilter", request);
+        }
       }
+    }
+  },
+  computed: {
+    options() {
+      return this.$store.state.moviesGenres;
+    },
+    selected() {
+      return this.$store.state.activeGenre;
     }
   },
   watch: {
@@ -53,7 +69,9 @@ export default {
     }
   },
   created: function() {
-    this.getData();
+    if (this.$store.state.movieFilter.initialize) {
+      this.getData();
+    }
   }
 };
 </script>
