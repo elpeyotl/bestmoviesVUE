@@ -14,7 +14,8 @@
         <div class="card-body text-center">
           <span class="badge badge-warning m-1">Rating {{movie.vote_average}}</span>
           <span class="badge badge-info m-1">Year {{formatDate(movie.release_date, 'YYYY')}}</span>
-          <span v-for="genre in genres" :key="genre" class="badge badge-danger m-1">{{genre}}</span>
+          <span v-for="genre in movie.genres" :key="genre.id" class="badge badge-success m-1">{{genre.name}}</span>
+          <span class="badge badge-primary m-1">Runtime {{movie.runtime}} minutes</span>
 
           <br>
           <br>
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+import http from "@/services/httpService";
 import vJumbotron from "@/components/v-jumbotron";
 import { formatDate } from "@/mixins/formatDate";
 
@@ -39,16 +41,24 @@ export default {
 
   data: () => {
     return {
-      movie: ""
-    };
-  },
-  computed: {
-    genres() {
-      return result;
+      movie: {
+        genre_ids: [],
+        title: '',
+      },
     }
   },
-  mounted: function() {
-    this.movie = this.$route.params.data;
+  methods: {
+     async getData() {
+      const { data: movie } = await http.get(
+        `/movie/${this.$route.params.id}`
+      );
+      console.log(movie)
+      this.movie = movie;
+    }
+  },
+  created: function() {
+    this.getData()
+    console.log(this.$route.params)
   }
 };
 </script>
