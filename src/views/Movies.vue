@@ -1,9 +1,20 @@
 <template>
   <div>
+    <div class="container d-flex justify-content-center p-4">
+      <button
+            @click="back"
+            type="button"
+            class="btn btn-outline-info"
+          >
+          <i class="fas fa-arrow-left"></i> Back</button>
+    </div>
+
     <v-jumbotron
       :heading="movie.title"
-      text="Discover best rated movies of all time and add it to your watchlist."
+      :text="movie.tagline"
     />
+
+
     <div class="container">
       <div class="card text-centered" style="width: 100%">
         <img
@@ -22,6 +33,13 @@
           <h5 class="card-title">{{movie.title}}</h5>
           <p class="card-text">{{movie.overview}}</p>
           <v-watch-buttons :movie="movie" class="text-center"/>
+          <a :href="`https://www.imdb.com/title/${movie.imdb_id}`" target="_blank">
+           <button
+            type="button"
+            class="btn btn-outline-info m-1"
+          >
+          <i class="fas fa-info"></i> Visit IMDB</button>
+          </a>
         </div>
       </div>
     </div>
@@ -54,11 +72,14 @@ export default {
       );
       console.log(movie)
       this.movie = movie;
+    },
+    back () {
+      this.$router.back()
     }
   },
+
   created: function() {
     this.getData()
-    console.log(this.$route.params)
   }
 };
 </script>

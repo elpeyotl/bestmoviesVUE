@@ -50,19 +50,22 @@ export default {
       storeMovies.page = pageNumber;
       this.loading = false;
       this.$store.commit("storeMovies", storeMovies);
+    },
+    handleScroll() {
+        var self = this;
+       let bottomOfWindow =
+        document.documentElement.scrollTop + window.innerHeight ===
+        document.documentElement.offsetHeight;
+        if (bottomOfWindow) {
+          if (!self.loading) self.getData();
+        }
     }
   },
   created: function() {
-    var self = this;
-    const scroll = document.addEventListener("scroll", function() {
-      let bottomOfWindow =
-        document.documentElement.scrollTop + window.innerHeight ===
-        document.documentElement.offsetHeight;
-
-      if (bottomOfWindow) {
-        if (!self.loading) self.getData();
-      }
-    });
+    document.addEventListener("scroll",this.handleScroll, false)
+  },
+  beforeDestroy: function () {
+    document.removeEventListener("scroll", this.handleScroll, false);
   }
 };
 </script>

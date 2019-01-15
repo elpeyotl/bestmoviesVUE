@@ -15,7 +15,6 @@ export default {
   },
   watch: {
     alert(newfilter, oldfilter) {
-      console.log(newfilter, oldfilter);
       if (alert) {
         var self = this;
         setTimeout(function() {

@@ -17,7 +17,7 @@
           <td class="cursor" @click="movieDetail(movie)">
             <div v-if="movie.backdrop_path">
               <img
-                :src="`${$store.state.config.images.secure_base_url}${$store.state.config.images.poster_sizes[1]}${movie.poster_path}`"
+                :src="baseUrl + posterSize + movie.poster_path"
               >
             </div>
             <div v-else>
@@ -65,6 +65,14 @@ export default {
         name: "movies",
         params: { id: movie.id, data: movie }
       });
+    }
+  },
+  computed: {
+    baseUrl () {
+      return this.$store.state.config.images.secure_base_url
+    },
+    posterSize () {
+      return this.$store.state.config.images.poster_sizes[1]
     }
   }
 };

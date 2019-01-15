@@ -26,10 +26,18 @@ export default {
   },
   methods: {
     async getData() {
+
+      console.log('test')
       const { data: genres } = await http.get("/genre/movie/list");
       const options = [...this.placeholder, ...genres.genres];
       this.$store.commit("activeGenre", defaultgenre);
       this.$store.commit("storeGenres", options);
+      const request = {
+            url: "/movie/top_rated",
+            initialize: false
+          };
+      this.$store.commit("updateMovieFilter", request);
+
     },
     updateMovies(option) {
       if (this.$store.state.activeGenre.id != option.id) {
@@ -69,7 +77,8 @@ export default {
     }
   },
   created: function() {
-    if (this.$store.state.movieFilter.initialize) {
+    if (this.$store.state.movieFilter.initialize === true) {
+      console.log('tet')
       this.getData();
     }
   }

@@ -26,14 +26,15 @@ export default {
   components: { vMovieTable, vMovieFilter, vJumbotron, vLayzload },
   data: () => {
     return {
-      movies: {
-        results: []
-      }
+
     };
   },
   computed: {
     filter() {
       return this.$store.state.movieFilter;
+    },
+    movies() {
+      return this.$store.state.movies;
     }
   },
   watch: {
@@ -51,17 +52,14 @@ export default {
           }
         }
       );
-      this.movies = movies;
-      this.$store.commit("storeMovies", this.movies);
+      this.$store.commit("storeMovies", movies);
     }
   },
   created: function() {
     if (this.$store.state.movies.results.length === 0) {
       this.getData();
-    } else {
-      this.movies = this.$store.state.movies;
     }
-  }
+  },
 };
 </script>
 

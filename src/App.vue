@@ -28,7 +28,7 @@ export default {
       const { data: images } = await http.get("configuration");
       console.log(images);
       this.$store.commit("getConfig", images);
-    }
+    },
   },
   created: function() {
     this.getData();
